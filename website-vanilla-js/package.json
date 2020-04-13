@@ -1,0 +1,14 @@
+{
+  "name": "frontend-tooling-website-vanilla-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/benembery/frontend-tooling.git",
+  "author": "Ben Embery",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "webfontloader": "^1.6.28"
+  }
+}
