@@ -5,39 +5,45 @@ import { terser } from 'rollup-plugin-terser';
 
 const __outputDir = './dist/js'
 
-export default {
-    input: './assets/main.js',
-    output: [
-        {
-            dir: `${__outputDir}/es/`,
+const plugins = [
+    resolve(),
+    commonJs(),
+    terser(),
+];
+
+export default [
+    {
+        input: './assets/main-module.js',
+        output: {
+            dir: `${__outputDir}/`,
             format: 'esm',
             entryFileNames: '[name].[hash].mjs',
+            chunkFileNames: '[name].[hash].mjs',
             sourcemap: true,
             dynamicImportFunction: '__import__'
         },
-        {
-            dir: `${__outputDir}/sys/`,
-            format: 'system',
-            sourcemap: true,
-        },
+        plugins,
+        manualChunks(id) {
+            if (!id.includes('node_modules'))
+                return;
 
+            const dirs = id.split(path.sep);
+            const pkgOrScope = dirs[dirs.lastIndexOf('node_modules') + 1];
 
-    ],
-    plugins: [
-        resolve(),
-        commonJs(),
-        terser(),
-    ],
-    manualChunks(id) {
-        if (!id.includes('node_modules'))
-            return;
+            if (['webfontloader', 'dynamic-import-polyfill'].includes(pkgOrScope))
+                return 'core'
 
-        const dirs = id.split(path.sep);
-        const pkgOrScope = dirs[dirs.lastIndexOf('node_modules') + 1];
-
-        if(['webfontloader', 'dynamic-import-polyfill'].indexOf(pkgOrScope) > -1)
-            return 'core'
-
-        return pkgOrScope
+            return pkgOrScope
+        }
+    },
+    {
+        input: './assets/main-nomodule.js',
+        inlineDynamicImports: true,
+        plugins,
+        output: {
+            dir: `${__outputDir}/nomod/`,
+            format: 'iife',
+            entryFileNames: '[name]-[hash].js',
+        }
     }
-};
+]

@@ -1,4 +1,6 @@
-export default function() {
+export default async function () {
     console.log('Module A!')
-    import('./moduleB').then(({default: b}) => b())
+    const { b } = await import('./moduleB')
+
+    b();
 }
