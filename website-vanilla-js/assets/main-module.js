@@ -1,5 +1,5 @@
-import dynamicImportPolyfill from 'dynamic-import-polyfill';
+import { initialize } from 'dynamic-import-polyfill';
 import main from './main';
-dynamicImportPolyfill.initialize();
+initialize({ modulePath: '/' });
 
 main();

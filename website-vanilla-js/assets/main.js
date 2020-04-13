@@ -1,3 +1,5 @@
 import a from './moduleA';
 
-a();
+export default function () {
+    a();
+}

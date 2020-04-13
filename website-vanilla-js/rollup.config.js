@@ -25,15 +25,19 @@ export default [
         plugins,
         manualChunks(id) {
             if (!id.includes('node_modules'))
-                return;
+                return
 
             const dirs = id.split(path.sep);
-            const pkgOrScope = dirs[dirs.lastIndexOf('node_modules') + 1];
+            const name = dirs[dirs.lastIndexOf('node_modules') + 1];
 
-            if (['webfontloader', 'dynamic-import-polyfill'].includes(pkgOrScope))
+            // Ensure dynamic-import-polyfill is included in main bundle.
+            if(name === 'dynamic-import-polyfill')
+                return
+
+            if (['webfontloader'].includes(name))
                 return 'core'
 
-            return pkgOrScope
+            return name
         }
     },
     {
